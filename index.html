@@ -1,0 +1,1058 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CHEM DEFENSE</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800;900&display=swap');
+
+:root {
+  --bg: #07111f;
+  --panel: #101f32;
+  --panel2: #162940;
+  --cyan: #35e0df;
+  --blue: #398cff;
+  --text: #edf7ff;
+  --muted: #91a8bd;
+  --green: #65e6a3;
+  --gold: #ffc857;
+  --red: #ff657c;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background:
+    radial-gradient(ellipse at 15% 0%, #123452 0%, transparent 40%),
+    radial-gradient(ellipse at 90% 90%, #102d3b 0%, transparent 35%),
+    var(--bg);
+  color: var(--text);
+  font-family: 'Be Vietnam Pro', sans-serif;
+}
+
+button { font: inherit; cursor: pointer; }
+
+header {
+  min-height: 76px;
+  padding: 14px 4%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  border-bottom: 1px solid #27435a;
+  background: #091727dd;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo-icon {
+  width: 43px;
+  height: 43px;
+  border-radius: 13px;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(135deg, #1b9fae, #326de2);
+  font-size: 24px;
+  box-shadow: 0 0 25px #24d4d455;
+}
+
+.logo h1 {
+  margin: 0;
+  font-size: 21px;
+  letter-spacing: 2px;
+  font-weight: 900;
+}
+
+.logo p {
+  margin: 2px 0 0;
+  font-size: 10px;
+  color: var(--muted);
+  letter-spacing: 2px;
+}
+
+.header-tag {
+  color: var(--cyan);
+  border: 1px solid #35e0df55;
+  border-radius: 30px;
+  padding: 7px 13px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+main {
+  width: min(1450px, 96%);
+  margin: 24px auto;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.stat {
+  background: linear-gradient(145deg, #142b42, #0d1c2e);
+  border: 1px solid #28445d;
+  border-radius: 13px;
+  padding: 13px 16px;
+}
+
+.stat-label {
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.stat-value {
+  font-size: 23px;
+  font-weight: 900;
+  margin-top: 3px;
+}
+
+.stat-value.cyan { color: var(--cyan); }
+.stat-value.gold { color: var(--gold); }
+.stat-value.red { color: var(--red); }
+.stat-value.green { color: var(--green); }
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 310px;
+  gap: 16px;
+  align-items: start;
+}
+
+.panel {
+  background: #0e1d2e;
+  border: 1px solid #29445c;
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.panel-heading {
+  padding: 15px 18px;
+  border-bottom: 1px solid #263e54;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
+.panel-heading h2 {
+  margin: 0;
+  font-size: 14px;
+  letter-spacing: 1px;
+}
+
+.panel-heading span {
+  font-size: 10px;
+  color: var(--cyan);
+  font-weight: 700;
+}
+
+.game-area { padding: 12px; }
+
+canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+  background: #0b1c2b;
+  border: 1px solid #29485d;
+  border-radius: 10px;
+  cursor: crosshair;
+  touch-action: manipulation;
+}
+
+.game-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 9px;
+  padding: 12px 2px 1px;
+}
+
+.btn {
+  border: 1px solid #35536b;
+  color: var(--text);
+  background: #1a3047;
+  padding: 10px 14px;
+  border-radius: 9px;
+  font-size: 12px;
+  font-weight: 700;
+  transition: .18s;
+}
+
+.btn:hover { filter: brightness(1.2); transform: translateY(-1px); }
+
+.btn.primary {
+  color: #061a23;
+  border: none;
+  background: linear-gradient(100deg, #39d9d2, #66e6a5);
+}
+
+.btn:disabled {
+  opacity: .4;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.hint {
+  margin-left: auto;
+  font-size: 10px;
+  color: var(--muted);
+}
+
+.side-content { padding: 14px; }
+
+.section-title {
+  margin: 4px 0 11px;
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+}
+
+.tower-card {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  text-align: left;
+  padding: 11px;
+  margin-bottom: 9px;
+  border-radius: 11px;
+  border: 1px solid #2b455b;
+  background: #14283d;
+  color: var(--text);
+  transition: .15s;
+}
+
+.tower-card:hover { border-color: var(--cyan); }
+
+.tower-card.selected {
+  border-color: var(--cyan);
+  background: #12364a;
+  box-shadow: inset 0 0 0 1px #35e0df55;
+}
+
+.tower-card:disabled {
+  opacity: .45;
+  cursor: not-allowed;
+}
+
+.tower-icon {
+  flex: 0 0 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  background: #203c53;
+  border-radius: 10px;
+  font-size: 22px;
+}
+
+.tower-info { flex: 1; min-width: 0; }
+
+.tower-info strong {
+  display: block;
+  font-size: 12px;
+}
+
+.tower-info small {
+  display: block;
+  color: var(--muted);
+  font-size: 9px;
+  margin-top: 4px;
+}
+
+.tower-cost {
+  color: var(--gold);
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.lab-box {
+  border: 1px solid #35536a;
+  border-radius: 12px;
+  padding: 12px;
+  background: linear-gradient(145deg, #142b40, #102033);
+  margin-top: 18px;
+}
+
+.lab-box h3 {
+  margin: 0 0 5px;
+  font-size: 13px;
+}
+
+.lab-box p {
+  margin: 0 0 12px;
+  color: var(--muted);
+  font-size: 10px;
+  line-height: 1.6;
+}
+
+.challenge {
+  border-top: 1px solid #2c455b;
+  padding: 11px 0;
+}
+
+.challenge strong {
+  font-size: 11px;
+  display: block;
+  margin-bottom: 7px;
+}
+
+.equation {
+  color: var(--cyan);
+  font-weight: 800;
+  font-size: 12px;
+  text-align: center;
+  padding: 9px 3px;
+  background: #091a2a;
+  border-radius: 7px;
+  margin-bottom: 8px;
+}
+
+.answer-row {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.answer-row input {
+  width: 48px;
+  min-width: 0;
+  padding: 8px 3px;
+  text-align: center;
+  color: white;
+  background: #091827;
+  border: 1px solid #39566c;
+  border-radius: 6px;
+  outline: none;
+}
+
+.answer-row input:focus { border-color: var(--cyan); }
+
+.answer-row button {
+  flex: 1;
+  padding: 8px 5px;
+  border: 0;
+  border-radius: 6px;
+  background: #176e75;
+  color: white;
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.message {
+  min-height: 17px;
+  font-size: 10px;
+  margin-top: 7px;
+  color: var(--green);
+}
+
+.log {
+  margin-top: 15px;
+  padding: 11px;
+  border-radius: 10px;
+  background: #091827;
+  border: 1px solid #243e54;
+}
+
+.log h3 {
+  margin: 0 0 8px;
+  font-size: 10px;
+  letter-spacing: 1px;
+}
+
+#logText {
+  color: var(--muted);
+  font-size: 10px;
+  line-height: 1.8;
+  min-height: 42px;
+}
+
+footer {
+  text-align: center;
+  padding: 22px 10px 30px;
+  color: #6e879d;
+  font-size: 10px;
+}
+
+@media (max-width: 850px) {
+  .layout { grid-template-columns: 1fr; }
+  .stats { grid-template-columns: repeat(2, 1fr); }
+  .side-content { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+  .side-content > .section-title { grid-column: 1 / -1; }
+  .lab-box { margin-top: 0; }
+}
+
+@media (max-width: 560px) {
+  main { width: 94%; margin-top: 14px; }
+  .side-content { display: block; }
+  .header-tag { display: none; }
+  .hint { width: 100%; margin: 0; }
+  .stat-value { font-size: 20px; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <div class="logo-icon">⚗️</div>
+    <div>
+      <h1>CHEM DEFENSE</h1>
+      <p>SCIENCE • STRATEGY • DEFENSE</p>
+    </div>
+  </div>
+  <div class="header-tag">PROTOTYPE 0.1</div>
+</header>
+
+<main>
+  <section class="stats">
+    <div class="stat">
+      <div class="stat-label">NĂNG LƯỢNG</div>
+      <div class="stat-value gold" id="coins">140</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">MÁU CĂN CỨ</div>
+      <div class="stat-value red" id="baseHp">20</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">ĐỢT QUÁI</div>
+      <div class="stat-value cyan" id="wave">0</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">QUÁI CÒN LẠI</div>
+      <div class="stat-value green" id="enemyCount">0</div>
+    </div>
+  </section>
+
+  <div class="layout">
+    <section class="panel">
+      <div class="panel-heading">
+        <h2>🗺️ KHU VỰC PHÒNG THỦ</h2>
+        <span id="gameStatus">SẴN SÀNG</span>
+      </div>
+
+      <div class="game-area">
+        <canvas id="game" width="920" height="500"></canvas>
+        <div class="game-controls">
+          <button class="btn primary" id="startWave">▶ BẮT ĐẦU ĐỢT</button>
+          <button class="btn" id="cancelSelect">✕ BỎ CHỌN THÁP</button>
+          <button class="btn" id="restart">↻ CHƠI LẠI</button>
+          <span class="hint">Chọn tháp → nhấn vào ô trống trên bản đồ</span>
+        </div>
+      </div>
+    </section>
+
+    <aside class="panel">
+      <div class="panel-heading">
+        <h2>⚗️ PHÒNG NGHIÊN CỨU</h2>
+        <span>LAB 01</span>
+      </div>
+
+      <div class="side-content">
+        <div>
+          <div class="section-title">DANH SÁCH THÁP</div>
+
+          <button class="tower-card selected" data-tower="water" id="card-water">
+            <span class="tower-icon">💧</span>
+            <span class="tower-info">
+              <strong>H₂O — Thủy tháp</strong>
+              <small>Gây sát thương và làm chậm</small>
+            </span>
+            <span class="tower-cost">50 ⚡</span>
+          </button>
+
+          <button class="tower-card" data-tower="salt" id="card-salt" disabled>
+            <span class="tower-icon">💎</span>
+            <span class="tower-info">
+              <strong>NaCl — Tinh thể</strong>
+              <small>Tấn công lan xung quanh</small>
+            </span>
+            <span class="tower-cost">90 ⚡</span>
+          </button>
+
+          <button class="tower-card" data-tower="iron" id="card-iron" disabled>
+            <span class="tower-icon">⚙️</span>
+            <span class="tower-info">
+              <strong>FeS — Hắc thiết</strong>
+              <small>Sát thương đơn mục tiêu mạnh</small>
+            </span>
+            <span class="tower-cost">120 ⚡</span>
+          </button>
+        </div>
+
+        <div class="lab-box">
+          <h3>🧬 BÀN CÂN BẰNG</h3>
+          <p>Hoàn thành phương trình hóa học để nghiên cứu và mở khóa tháp mới.</p>
+
+          <div class="challenge">
+            <strong>NHIỆM VỤ 01 — MỞ KHÓA NaCl</strong>
+            <div class="equation">H₂ + O₂ → H₂O</div>
+            <div class="answer-row">
+              <input id="a1" type="number" min="1" placeholder="H₂">
+              <span>:</span>
+              <input id="a2" type="number" min="1" placeholder="O₂">
+              <span>:</span>
+              <input id="a3" type="number" min="1" placeholder="H₂O">
+              <button id="check1">KIỂM TRA</button>
+            </div>
+            <div class="message" id="msg1">Nhập hệ số theo thứ tự từ trái sang phải.</div>
+          </div>
+
+          <div class="challenge">
+            <strong>NHIỆM VỤ 02 — MỞ KHÓA FeS</strong>
+            <div class="equation">Fe + S → FeS</div>
+            <div class="answer-row">
+              <input id="b1" type="number" min="1" placeholder="Fe">
+              <span>:</span>
+              <input id="b2" type="number" min="1" placeholder="S">
+              <span>:</span>
+              <input id="b3" type="number" min="1" placeholder="FeS">
+              <button id="check2">KIỂM TRA</button>
+            </div>
+            <div class="message" id="msg2">Nhập hệ số theo thứ tự từ trái sang phải.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="log">
+        <h3>📡 NHẬT KÝ HỆ THỐNG</h3>
+        <div id="logText">Hệ thống đã khởi động. Hãy nghiên cứu và xây dựng tháp phòng thủ!</div>
+      </div>
+    </aside>
+  </div>
+</main>
+
+<footer>CHEM DEFENSE • HỌC HÓA HỌC QUA CHIẾN THUẬT • PROTOTYPE 0.1</footer>
+
+<script>
+const canvas = document.getElementById("game");
+const ctx = canvas.getContext("2d");
+
+const W = canvas.width;
+const H = canvas.height;
+
+const path = [
+  {x: -10, y: 265},
+  {x: 180, y: 265},
+  {x: 180, y: 105},
+  {x: 420, y: 105},
+  {x: 420, y: 375},
+  {x: 680, y: 375},
+  {x: 680, y: 210},
+  {x: 930, y: 210}
+];
+
+const towerTypes = {
+  water: {
+    name: "H₂O",
+    cost: 50,
+    damage: 13,
+    range: 145,
+    cooldown: 0.75,
+    color: "#42dce9",
+    slow: 0.65,
+    splash: 0
+  },
+  salt: {
+    name: "NaCl",
+    cost: 90,
+    damage: 19,
+    range: 135,
+    cooldown: 1.05,
+    color: "#b9a7ff",
+    slow: 1,
+    splash: 42
+  },
+  iron: {
+    name: "FeS",
+    cost: 120,
+    damage: 43,
+    range: 175,
+    cooldown: 1.35,
+    color: "#ffb65c",
+    slow: 1,
+    splash: 0
+  }
+};
+
+let coins = 140;
+let baseHp = 20;
+let wave = 0;
+let enemies = [];
+let towers = [];
+let bullets = [];
+let selectedTower = "water";
+let unlocked = { water: true, salt: false, iron: false };
+let spawning = 0;
+let spawnTimer = 0;
+let gameOver = false;
+let lastTime = 0;
+let effects = [];
+
+const $ = id => document.getElementById(id);
+
+function log(message) {
+  $("logText").textContent = message;
+}
+
+function updateStats() {
+  $("coins").textContent = coins;
+  $("baseHp").textContent = baseHp;
+  $("wave").textContent = wave;
+  $("enemyCount").textContent = enemies.length + spawning;
+  $("gameStatus").textContent = gameOver ? "THẤT THỦ" :
+    spawning > 0 ? "ĐANG TRIỂN KHAI" :
+    enemies.length > 0 ? "ĐANG PHÒNG THỦ" : "SẴN SÀNG";
+}
+
+function distance(a, b) {
+  return Math.hypot(a.x - b.x, a.y - b.y);
+}
+
+function distanceToSegment(p, a, b) {
+  const dx = b.x - a.x;
+  const dy = b.y - a.y;
+  const length = dx * dx + dy * dy;
+  const t = length === 0 ? 0 : Math.max(0, Math.min(1,
+    ((p.x-a.x)*dx + (p.y-a.y)*dy) / length
+  ));
+  return Math.hypot(p.x - (a.x + t*dx), p.y - (a.y + t*dy));
+}
+
+function nearPath(p, radius) {
+  for (let i = 0; i < path.length - 1; i++) {
+    if (distanceToSegment(p, path[i], path[i+1]) < radius) return true;
+  }
+  return false;
+}
+
+function startWave() {
+  if (gameOver || spawning > 0 || enemies.length > 0) return;
+  wave++;
+  spawning = 5 + wave * 2;
+  spawnTimer = 0;
+  log("Đợt " + wave + " bắt đầu! Phát hiện sinh vật hóa học.");
+  updateStats();
+}
+
+function spawnEnemy() {
+  const hp = 45 + wave * 17;
+  enemies.push({
+    x: path[0].x,
+    y: path[0].y,
+    waypoint: 1,
+    hp: hp,
+    maxHp: hp,
+    speed: 44 + Math.min(wave * 2, 35),
+    reward: 9 + Math.floor(wave * 1.5),
+    slowTime: 0,
+    slowFactor: 1,
+    progress: 0,
+    radius: 13
+  });
+  spawning--;
+  updateStats();
+}
+
+function selectTower(type) {
+  if (!unlocked[type]) return;
+  selectedTower = type;
+  document.querySelectorAll(".tower-card").forEach(card => {
+    card.classList.toggle("selected", card.dataset.tower === type);
+  });
+}
+
+document.querySelectorAll(".tower-card").forEach(card => {
+  card.addEventListener("click", () => selectTower(card.dataset.tower));
+});
+
+$("cancelSelect").addEventListener("click", () => {
+  selectedTower = null;
+  document.querySelectorAll(".tower-card").forEach(card => card.classList.remove("selected"));
+});
+
+$("startWave").addEventListener("click", startWave);
+
+$("restart").addEventListener("click", () => {
+  coins = 140;
+  baseHp = 20;
+  wave = 0;
+  enemies = [];
+  towers = [];
+  bullets = [];
+  effects = [];
+  spawning = 0;
+  gameOver = false;
+  unlocked = { water: true, salt: false, iron: false };
+  $("msg1").textContent = "Nhập hệ số theo thứ tự từ trái sang phải.";
+  $("msg2").textContent = "Nhập hệ số theo thứ tự từ trái sang phải.";
+  $("card-salt").disabled = true;
+  $("card-iron").disabled = true;
+  selectTower("water");
+  log("Đã khởi động lại hệ thống.");
+  updateStats();
+});
+
+function unlockTower(type, messageId) {
+  unlocked[type] = true;
+  $("card-" + type).disabled = false;
+  $(messageId).textContent = "Chính xác! Đã mở khóa tháp " + towerTypes[type].name + "!";
+  log("Nghiên cứu thành công: mở khóa " + towerTypes[type].name + ".");
+}
+
+function checkEquation(ids, answer, type, messageId) {
+  if (unlocked[type]) return;
+  const values = ids.map(id => Number($(id).value));
+  if (values.some(v => !Number.isInteger(v) || v <= 0)) {
+    $(messageId).textContent = "Hãy nhập các hệ số nguyên dương.";
+    return;
+  }
+  if (values.every((v, i) => v === answer[i])) {
+    unlockTower(type, messageId);
+  } else {
+    $(messageId).textContent = "Chưa chính xác. Hãy kiểm tra số nguyên tử hai vế!";
+    $(messageId).style.color = "#ff8b9b";
+  }
+}
+
+$("check1").addEventListener("click", () =>
+  checkEquation(["a1","a2","a3"], [2,1,2], "salt", "msg1")
+);
+
+$("check2").addEventListener("click", () =>
+  checkEquation(["b1","b2","b3"], [1,1,1], "iron", "msg2")
+);
+
+function placeTower(x, y) {
+  if (!selectedTower || gameOver) return;
+  const type = towerTypes[selectedTower];
+  if (coins < type.cost) {
+    log("Không đủ năng lượng để xây tháp " + type.name + ".");
+    return;
+  }
+
+  const gx = Math.round(x / 40) * 40;
+  const gy = Math.round(y / 40) * 40;
+  const pos = {x: gx, y: gy};
+
+  if (gx < 25 || gx > W-25 || gy < 25 || gy > H-25) return;
+  if (nearPath(pos, 48)) {
+    log("Vị trí này quá gần đường di chuyển của quái!");
+    return;
+  }
+  if (towers.some(t => distance(t, pos) < 39)) {
+    log("Các tháp cần có khoảng cách với nhau.");
+    return;
+  }
+
+  coins -= type.cost;
+  towers.push({
+    x: gx, y: gy, type: selectedTower,
+    cooldown: 0, angle: 0
+  });
+  log("Đã xây dựng tháp " + type.name + ".");
+  updateStats();
+}
+
+canvas.addEventListener("click", event => {
+  const rect = canvas.getBoundingClientRect();
+  const x = (event.clientX - rect.left) * W / rect.width;
+  const y = (event.clientY - rect.top) * H / rect.height;
+  placeTower(x, y);
+});
+
+function fireTower(tower, enemy) {
+  const type = towerTypes[tower.type];
+  tower.cooldown = type.cooldown;
+  tower.angle = Math.atan2(enemy.y - tower.y, enemy.x - tower.x);
+
+  bullets.push({
+    x: tower.x, y: tower.y,
+    target: enemy,
+    speed: 390,
+    damage: type.damage,
+    color: type.color,
+    splash: type.splash,
+    slow: type.slow,
+    type: tower.type
+  });
+}
+
+function update(dt) {
+  if (!gameOver) {
+    if (spawning > 0) {
+      spawnTimer -= dt;
+      if (spawnTimer <= 0) {
+        spawnEnemy();
+        spawnTimer = 0.85;
+      }
+    }
+
+    for (const enemy of enemies) {
+      if (enemy.slowTime > 0) {
+        enemy.slowTime -= dt;
+        if (enemy.slowTime <= 0) enemy.slowFactor = 1;
+      }
+
+      let remaining = enemy.speed * enemy.slowFactor * dt;
+      while (remaining > 0 && enemy.waypoint < path.length) {
+        const target = path[enemy.waypoint];
+        const dx = target.x - enemy.x;
+        const dy = target.y - enemy.y;
+        const d = Math.hypot(dx, dy);
+
+        if (d <= remaining) {
+          enemy.x = target.x;
+          enemy.y = target.y;
+          remaining -= d;
+          enemy.waypoint++;
+          enemy.progress++;
+        } else {
+          enemy.x += dx / d * remaining;
+          enemy.y += dy / d * remaining;
+          remaining = 0;
+        }
+      }
+
+      if (enemy.waypoint >= path.length) {
+        enemy.reachedEnd = true;
+      }
+    }
+
+    enemies = enemies.filter(enemy => {
+      if (enemy.reachedEnd) {
+        baseHp--;
+        log("Một sinh vật đã vượt qua phòng tuyến!");
+        if (baseHp <= 0) {
+          baseHp = 0;
+          gameOver = true;
+          log("Căn cứ thất thủ! Hãy chơi lại để thử sức.");
+        }
+        return false;
+      }
+      return enemy.hp > 0;
+    });
+
+    for (const tower of towers) {
+      tower.cooldown -= dt;
+      if (tower.cooldown > 0) continue;
+
+      const type = towerTypes[tower.type];
+      let target = null;
+      let bestProgress = -1;
+
+      for (const enemy of enemies) {
+        if (distance(tower, enemy) <= type.range && enemy.progress >= bestProgress) {
+          target = enemy;
+          bestProgress = enemy.progress;
+        }
+      }
+
+      if (target) fireTower(tower, target);
+    }
+
+    bullets = bullets.filter(bullet => {
+      if (!bullet.target || bullet.target.hp <= 0) return false;
+
+      const dx = bullet.target.x - bullet.x;
+      const dy = bullet.target.y - bullet.y;
+      const d = Math.hypot(dx, dy);
+      const step = bullet.speed * dt;
+
+      if (d <= step + bullet.target.radius) {
+        if (bullet.splash > 0) {
+          for (const enemy of enemies) {
+            if (distance(enemy, bullet.target) <= bullet.splash) {
+              enemy.hp -= bullet.damage;
+            }
+          }
+          effects.push({x: bullet.target.x, y: bullet.target.y, life: .25, color: bullet.color, radius: bullet.splash});
+        } else {
+          bullet.target.hp -= bullet.damage;
+        }
+
+        if (bullet.slow < 1) {
+          bullet.target.slowTime = 1.5;
+          bullet.target.slowFactor = bullet.slow;
+        }
+        return false;
+      }
+
+      bullet.x += dx / d * step;
+      bullet.y += dy / d * step;
+      return true;
+    });
+
+    enemies = enemies.filter(enemy => {
+      if (enemy.hp <= 0) {
+        coins += enemy.reward;
+        return false;
+      }
+      return true;
+    });
+  }
+
+  effects = effects.filter(effect => {
+    effect.life -= dt;
+    return effect.life > 0;
+  });
+
+  updateStats();
+}
+
+function drawBackground() {
+  ctx.fillStyle = "#0b1c2b";
+  ctx.fillRect(0, 0, W, H);
+
+  ctx.strokeStyle = "rgba(79,150,175,.10)";
+  ctx.lineWidth = 1;
+
+  for (let x = 0; x <= W; x += 40) {
+    ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke();
+  }
+  for (let y = 0; y <= H; y += 40) {
+    ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke();
+  }
+
+  ctx.lineCap = "round";
+  ctx.lineJoin = "round";
+  ctx.strokeStyle = "#233b4c";
+  ctx.lineWidth = 57;
+  ctx.beginPath();
+  ctx.moveTo(path[0].x, path[0].y);
+  path.slice(1).forEach(p => ctx.lineTo(p.x, p.y));
+  ctx.stroke();
+
+  ctx.strokeStyle = "#34576a";
+  ctx.lineWidth = 2;
+  ctx.setLineDash([9, 12]);
+  ctx.beginPath();
+  ctx.moveTo(path[0].x, path[0].y);
+  path.slice(1).forEach(p => ctx.lineTo(p.x, p.y));
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  ctx.fillStyle = "#ff657c";
+  ctx.beginPath(); ctx.arc(880, 210, 17, 0, Math.PI*2); ctx.fill();
+  ctx.fillStyle = "#fff";
+  ctx.font = "bold 10px sans-serif";
+  ctx.textAlign = "center";
+  ctx.fillText("CORE", 880, 214);
+
+  ctx.fillStyle = "#8aa9ba";
+  ctx.font = "10px sans-serif";
+  ctx.textAlign = "left";
+  ctx.fillText("ĐƯỜNG DI CHUYỂN", 20, 30);
+}
+
+function drawTower(tower) {
+  const type = towerTypes[tower.type];
+
+  ctx.save();
+  ctx.translate(tower.x, tower.y);
+
+  ctx.fillStyle = type.color + "20";
+  ctx.beginPath();
+  ctx.arc(0, 0, 21, 0, Math.PI*2);
+  ctx.fill();
+
+  ctx.strokeStyle = type.color;
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.arc(0, 0, 16, 0, Math.PI*2);
+  ctx.stroke();
+
+  ctx.rotate(tower.angle);
+  ctx.fillStyle = type.color;
+  ctx.fillRect(0, -5, 22, 10);
+
+  ctx.rotate(-tower.angle);
+  ctx.fillStyle = "#dffaff";
+  ctx.beginPath();
+  ctx.arc(0, 0, 8, 0, Math.PI*2);
+  ctx.fill();
+
+  ctx.fillStyle = "#10283a";
+  ctx.font = "bold 9px sans-serif";
+  ctx.textAlign = "center";
+  ctx.fillText(towerTypes[tower.type].name, 0, 31);
+  ctx.restore();
+}
+
+function draw() {
+  drawBackground();
+
+  for (const tower of towers) drawTower(tower);
+
+  for (const enemy of enemies) {
+    ctx.fillStyle = enemy.slowTime > 0 ? "#62dff0" : "#ff7182";
+    ctx.beginPath();
+    ctx.arc(enemy.x, enemy.y, enemy.radius, 0, Math.PI*2);
+    ctx.fill();
+
+    ctx.fillStyle = "#311e2c";
+    ctx.beginPath();
+    ctx.arc(enemy.x-4, enemy.y-2, 2, 0, Math.PI*2);
+    ctx.arc(enemy.x+4, enemy.y-2, 2, 0, Math.PI*2);
+    ctx.fill();
+
+    ctx.fillStyle = "#392b37";
+    ctx.fillRect(enemy.x-15, enemy.y-23, 30, 4);
+    ctx.fillStyle = "#69e69c";
+    ctx.fillRect(enemy.x-15, enemy.y-23, 30 * Math.max(0, enemy.hp/enemy.maxHp), 4);
+  }
+
+  for (const bullet of bullets) {
+    ctx.fillStyle = bullet.color;
+    ctx.beginPath();
+    ctx.arc(bullet.x, bullet.y, 5, 0, Math.PI*2);
+    ctx.fill();
+  }
+
+  for (const effect of effects) {
+    ctx.globalAlpha = Math.max(0, effect.life / .25);
+    ctx.strokeStyle = effect.color;
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.arc(effect.x, effect.y, effect.radius * (1-effect.life/.25), 0, Math.PI*2);
+    ctx.stroke();
+    ctx.globalAlpha = 1;
+  }
+
+  if (gameOver) {
+    ctx.fillStyle = "rgba(4,10,20,.78)";
+    ctx.fillRect(0, 0, W, H);
+    ctx.fillStyle = "#ff7182";
+    ctx.font = "900 38px sans-serif";
+    ctx.textAlign = "center";
+    ctx.fillText("CĂN CỨ THẤT THỦ", W/2, H/2);
+    ctx.fillStyle = "#fff";
+    ctx.font = "15px sans-serif";
+    ctx.fillText("Nhấn CHƠI LẠI để thử sức lần nữa", W/2, H/2+34);
+  }
+}
+
+function loop(timestamp) {
+  const dt = Math.min((timestamp - lastTime) / 1000 || 0, 0.04);
+  lastTime = timestamp;
+  update(dt);
+  draw();
+  requestAnimationFrame(loop);
+}
+
+updateStats();
+requestAnimationFrame(loop);
+</script>
+</body>
+</html>
