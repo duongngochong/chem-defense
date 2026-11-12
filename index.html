@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#183447">
-<title>CHEM DEFENSE 0.4.5 — Celestial Fantasy Tower Evolution</title>
+<title>CHEM DEFENSE 0.5 — Celestial Fantasy Tower Evolution</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800;900&display=swap');
 :root{--ink:#243545;--muted:#71818a;--cream:#fff8e8;--paper:#fffdf5;--line:#d9c9a7;--green:#6caa72;--green2:#b8df9a;--teal:#4bb9b3;--blue:#78c9dc;--gold:#f4bd59;--pink:#ef91a4;--purple:#a995dc;--shadow:#23384b36;--dark:#183447}
@@ -267,14 +267,14 @@ canvas{border:2px solid #dec083!important;border-radius:14px!important;backgroun
   </aside>
  </div>
 </main>
-<footer>CHEM DEFENSE 0.4.5 • TOWER EVOLUTION • TACTICAL TARGETING • BOSS PHASES • CELESTIAL VFX<br><span class="danger-note">Các hiệu ứng chiến đấu là mô phỏng trong game. Kiến thức hóa học chỉ dùng để học tập; không thực hiện thí nghiệm theo cơ chế trong game.</span></footer>
+<footer>CHEM DEFENSE 0.5 • TOWER EVOLUTION • TACTICAL TARGETING • BOSS PHASES • CELESTIAL VFX<br><span class="danger-note">Các hiệu ứng chiến đấu là mô phỏng trong game. Kiến thức hóa học chỉ dùng để học tập; không thực hiện thí nghiệm theo cơ chế trong game.</span></footer>
 </div>
 <div class="toast" id="toast"></div>
 
 <script>
 'use strict';
 // ============================================================
-// CHEM DEFENSE 0.4.5 — CELESTIAL FANTASY TOWER EVOLUTION
+// CHEM DEFENSE 0.5 — CELESTIAL FANTASY TOWER EVOLUTION
 // ============================================================
 const canvas=document.getElementById('game');
 const ctx=canvas.getContext('2d');
@@ -625,6 +625,13 @@ function drawPath(){
  strokePath(isWorldEmber()?'#694d47':'#274b48',84,6);strokePath(isWorldCrystal()?'#8e91ad':'#566e53',76,1);
  const outer=ctx.createLinearGradient(0,0,W,H);outer.addColorStop(0,isWorldCrystal()?'#d8d2ed':isWorldEmber()?'#ad7860':'#c8a878');outer.addColorStop(.5,w.path);outer.addColorStop(1,isWorldCrystal()?'#b9c8d9':isWorldEmber()?'#d09b73':'#e1c797');strokePath(outer,69,0);
  const inner=ctx.createLinearGradient(0,0,0,H);inner.addColorStop(0,isWorldCrystal()?'#f4eefa':isWorldEmber()?'#efc79a':'#f6e1b6');inner.addColorStop(.5,w.path2);inner.addColorStop(1,isWorldCrystal()?'#d4e5e7':isWorldEmber()?'#c8916d':'#d6b784');strokePath(inner,55,-1);
+ // Faint twin wheel-worn tracks follow each road segment and bend.
+ ctx.save();ctx.lineCap='round';ctx.setLineDash([12,17]);ctx.lineWidth=2.2;ctx.strokeStyle='#624d3d35';
+ for(let i=0;i<path.length-1;i++){
+  const a=path[i],b=path[i+1],dx=b.x-a.x,dy=b.y-a.y,len=Math.hypot(dx,dy)||1,nx=-dy/len,ny=dx/len;
+  for(const side of [-1,1]){ctx.beginPath();ctx.moveTo(a.x+nx*side*10,a.y+ny*side*10);ctx.lineTo(b.x+nx*side*10,b.y+ny*side*10);ctx.stroke()}
+ }
+ ctx.setLineDash([]);ctx.restore();
  // Inlaid gold edge lines.
  ctx.globalAlpha=.75;ctx.strokeStyle=isWorldEmber()?'#ffcf8b':'#fff1c7';ctx.lineWidth=1.7;ctx.setLineDash([9,20]);ctx.beginPath();ctx.moveTo(path[0].x,path[0].y-25);path.slice(1).forEach(p=>ctx.lineTo(p.x,p.y-25));ctx.stroke();ctx.beginPath();ctx.moveTo(path[0].x,path[0].y+25);path.slice(1).forEach(p=>ctx.lineTo(p.x,p.y+25));ctx.stroke();ctx.setLineDash([]);ctx.globalAlpha=1;
  // Hand-laid pavers with staggered seams and soft highlights.
@@ -674,12 +681,15 @@ function drawBuildPads(){
 }
 function drawTree(x,y,s=1){
  ctx.save();ctx.translate(x,y);ctx.scale(s,s);
- const trunk=ctx.createLinearGradient(-8,0,8,0);trunk.addColorStop(0,'#422f2c');trunk.addColorStop(.42,'#936343');trunk.addColorStop(1,'#4d3930');ctx.fillStyle=trunk;ctx.strokeStyle='#382c2b';ctx.lineWidth=2.2;ctx.beginPath();ctx.moveTo(-7,1);ctx.lineTo(-6,-20);ctx.lineTo(-13,-32);ctx.lineTo(-8,-34);ctx.lineTo(0,-23);ctx.lineTo(8,-36);ctx.lineTo(13,-34);ctx.lineTo(6,-19);ctx.lineTo(8,5);ctx.closePath();ctx.fill();ctx.stroke();
+ const trunk=ctx.createLinearGradient(-8,0,8,0);trunk.addColorStop(0,'#422f2c');trunk.addColorStop(.42,'#936343');trunk.addColorStop(1,'#4d3930');
+ ctx.fillStyle=trunk;ctx.strokeStyle='#382c2b';ctx.lineWidth=2.2;ctx.beginPath();ctx.moveTo(-7,1);ctx.lineTo(-6,-20);ctx.lineTo(-13,-32);ctx.lineTo(-8,-34);ctx.lineTo(0,-23);ctx.lineTo(8,-36);ctx.lineTo(13,-34);ctx.lineTo(6,-19);ctx.lineTo(8,5);ctx.closePath();ctx.fill();ctx.stroke();
+ const wind=Math.sin(clock*.78+x*.017+y*.013)*.038;
+ ctx.save();ctx.translate(0,-23);ctx.rotate(wind);ctx.translate(0,23);
  const colors=currentWorld==='crystal'?['#28676b','#4b9b8c','#8ad0ae']:currentWorld==='ember'?['#71463e','#a85f4e','#d38a58']:['#285746','#4f8b55','#91c56c'];
  const leaf=(cx,cy,r,c)=>{const g=ctx.createRadialGradient(cx-r*.35,cy-r*.45,2,cx,cy,r*1.25);g.addColorStop(0,'#f3ffcf');g.addColorStop(.22,c);g.addColorStop(1,'#153e3b');ctx.fillStyle=g;ctx.strokeStyle='#163c39aa';ctx.lineWidth=1.8;ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.fill();ctx.stroke();ctx.globalAlpha=.28;ctx.fillStyle='#fff';ctx.beginPath();ctx.ellipse(cx-r*.25,cy-r*.32,r*.34,r*.16,-.5,0,Math.PI*2);ctx.fill();ctx.globalAlpha=1};
  leaf(-13,-25,18,colors[0]);leaf(9,-31,21,colors[1]);leaf(-2,-47,19,colors[2]);leaf(22,-19,13,colors[1]);leaf(-26,-12,13,colors[0]);
- // Tiny hanging luminous fruits.
- for(let i=0;i<3;i++){const a=i*2.1+clock*.15;ctx.fillStyle=currentWorld==='crystal'?'#a6fff1':'#f6d68c';ctx.shadowBlur=8;ctx.shadowColor=ctx.fillStyle;ctx.beginPath();ctx.arc(Math.cos(a)*17-2,-22+Math.sin(a)*12,2.4,0,Math.PI*2);ctx.fill()}ctx.shadowBlur=0;ctx.restore();
+ for(let i=0;i<3;i++){const a=i*2.1+clock*.15;ctx.fillStyle=currentWorld==='crystal'?'#a6fff1':'#f6d68c';ctx.shadowBlur=8;ctx.shadowColor=ctx.fillStyle;ctx.beginPath();ctx.arc(Math.cos(a)*17-2,-22+Math.sin(a)*12,2.4,0,Math.PI*2);ctx.fill()}
+ ctx.shadowBlur=0;ctx.restore();ctx.restore();
 }
 function drawRock(x,y,s=1){
  ctx.save();ctx.translate(x,y);ctx.scale(s,s);ctx.shadowBlur=12;ctx.shadowColor='#06192388';ctx.fillStyle='#364e55';ctx.strokeStyle='#243d47';ctx.lineWidth=2.4;ctx.beginPath();ctx.moveTo(-23,10);ctx.lineTo(-18,-7);ctx.lineTo(-8,-22);ctx.lineTo(9,-25);ctx.lineTo(23,-12);ctx.lineTo(26,8);ctx.lineTo(10,17);ctx.lineTo(-12,16);ctx.closePath();ctx.fill();ctx.stroke();ctx.shadowBlur=0;
@@ -689,6 +699,13 @@ function drawCrystal(x,y,s=1){
  ctx.save();ctx.translate(x,y);ctx.scale(s,s);const glow=currentWorld==='ember'?'#ffc17a':currentWorld==='crystal'?'#9cfff0':'#79edf0';ctx.shadowBlur=23;ctx.shadowColor=glow;
  const shard=(x0,y0,h,w,c1,c2)=>{const gr=ctx.createLinearGradient(x0-w,y0-h,x0+w,y0);gr.addColorStop(0,c1);gr.addColorStop(.48,c2);gr.addColorStop(1,'#24566a');ctx.fillStyle=gr;ctx.strokeStyle='#d8ffff';ctx.lineWidth=1.7;ctx.beginPath();ctx.moveTo(x0,y0-h);ctx.lineTo(x0+w,y0-h*.35);ctx.lineTo(x0+w*.65,y0);ctx.lineTo(x0-w*.65,y0);ctx.lineTo(x0-w,y0-h*.4);ctx.closePath();ctx.fill();ctx.stroke();ctx.fillStyle='#fff';ctx.globalAlpha=.55;ctx.beginPath();ctx.moveTo(x0,y0-h);ctx.lineTo(x0+w*.1,y0-h*.25);ctx.lineTo(x0-w*.65,y0);ctx.lineTo(x0-w,y0-h*.4);ctx.closePath();ctx.fill();ctx.globalAlpha=1};
  shard(-9,15,31,13,'#efffff','#5ed4d7');shard(9,16,44,15,'#fff3ca',glow);shard(23,17,24,10,'#eefeff','#73cde4');ctx.shadowBlur=0;ctx.fillStyle='#e6fff0';ctx.globalAlpha=.65;ctx.beginPath();ctx.ellipse(1,16,34,5,0,0,Math.PI*2);ctx.fill();ctx.globalAlpha=1;ctx.restore();
+}
+function decorClear(x,y){
+ const point={x,y};
+ if(onPath(point,72))return false;
+ if(buildPads.some(p=>Math.hypot(p.x-x,p.y-y)<48))return false;
+ if(Math.hypot(x-900,y-230)<78)return false;
+ return true;
 }
 function drawDecor(){
  const trees=[[65,90,1.15],[300,470,.9],[560,65,.8],[820,470,1],[900,90,.78],[48,490,.72],[490,500,.65],[760,55,.62]];
@@ -711,6 +728,41 @@ function drawAmbientMagic(){
   if(i%6===0){ctx.strokeStyle='#fff8db';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(x-4,y);ctx.lineTo(x+4,y);ctx.moveTo(x,y-4);ctx.lineTo(x,y+4);ctx.stroke()}
   ctx.restore();
  }
+}
+function drawClimateEffects(){
+ const cycle=(clock%180)/180;
+ const daylight=.5+.5*Math.cos(cycle*Math.PI*2);
+ const night=1-daylight;
+ const twilight=Math.max(0,1-Math.abs(daylight-.5)/.24);
+ const weather=Math.floor(clock/65)%3; // 0 clear, 1 drifting fog, 2 light rain
+ ctx.save();
+ if(night>.015){
+  ctx.fillStyle='rgba(8,18,43,'+(night*.29)+')';ctx.fillRect(0,0,W,H);
+  const moonX=785,moonY=66,moonGlow=ctx.createRadialGradient(moonX,moonY,4,moonX,moonY,150);
+  moonGlow.addColorStop(0,'rgba(208,237,255,'+(night*.28)+')');moonGlow.addColorStop(1,'rgba(160,210,255,0)');
+  ctx.fillStyle=moonGlow;ctx.fillRect(moonX-150,moonY-150,300,300);
+  ctx.globalAlpha=night*.8;ctx.fillStyle='#e4f2ff';ctx.shadowBlur=16;ctx.shadowColor='#c9e7ff';ctx.beginPath();ctx.arc(moonX,moonY,13,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;
+  for(let i=0;i<34;i++){const x=(i*197+41)%W,y=(i*113+29)%H;if(onPath({x,y},34))continue;const a=night*(.22+.42*(.5+.5*Math.sin(clock*2.1+i)));ctx.globalAlpha=a;ctx.fillStyle='#e9f5ff';ctx.beginPath();ctx.arc(x,y,1+(i%3)*.45,0,Math.PI*2);ctx.fill()}
+ }
+ if(twilight>.01){ctx.globalAlpha=twilight*.12;ctx.fillStyle='#ffad76';ctx.fillRect(0,0,W,H)}
+ if(weather===1){
+  for(let i=0;i<5;i++){const x=((i*238+clock*7)% (W+260))-130,y=75+i*93+Math.sin(clock*.22+i)*18;const fog=ctx.createRadialGradient(x,y,8,x,y,155);fog.addColorStop(0,'rgba(207,230,225,.12)');fog.addColorStop(1,'rgba(207,230,225,0)');ctx.fillStyle=fog;ctx.fillRect(x-155,y-155,310,310)}
+ }else if(weather===2){
+  ctx.strokeStyle='rgba(205,231,246,.28)';ctx.lineWidth=1.15;ctx.lineCap='round';
+  for(let i=0;i<42;i++){const x=(i*83+clock*82)%W,y=(i*137+clock*145)%H;if(onPath({x,y},34))continue;ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x-5,y+13);ctx.stroke()}
+ }
+ // A few windblown leaves make the forest feel alive without obscuring units.
+ for(let i=0;i<13;i++){
+  const x=(i*91+clock*(13+(i%4)*2)+Math.sin(clock*.8+i)*24)%(W+24)-12;
+  const y=(i*67+Math.sin(clock*.7+i*1.9)*22+clock*(2.5+(i%3)))%H;
+  if(onPath({x,y},37))continue;
+  ctx.save();ctx.translate(x,y);ctx.rotate(Math.sin(clock*1.4+i)*.65);
+  ctx.globalAlpha=.42+.25*Math.sin(clock*2+i);
+  ctx.fillStyle=i%3===0?'#f5d68c':i%3===1?'#c9e8a2':'#a9e2d2';
+  ctx.beginPath();ctx.ellipse(0,0,5.2,2.1,.15,0,Math.PI*2);ctx.fill();
+  ctx.strokeStyle='#ffffff77';ctx.lineWidth=.7;ctx.beginPath();ctx.moveTo(-3,0);ctx.lineTo(3,0);ctx.stroke();ctx.restore();
+ }
+ ctx.restore();
 }
 function drawBase(){
  ctx.save();ctx.translate(900,230);const pulse=.5+.5*Math.sin(clock*2.4);
@@ -885,7 +937,7 @@ function drawParticles(){for(const p of particles){ctx.globalAlpha=Math.max(0,p.
 function drawMists(){for(const m of mists){ctx.globalAlpha=.23*(m.life/m.max);ctx.fillStyle=m.color;ctx.beginPath();ctx.arc(m.x,m.y,m.r*(1.04-m.life/m.max*.04),0,Math.PI*2);ctx.fill()}ctx.globalAlpha=1}
 function drawBanner(){if(bannerTimer<=0)return;const alpha=Math.min(1,bannerTimer*1.8);ctx.save();ctx.globalAlpha=alpha;rounded(W/2-210,18,420,42,12,'#183d4bdd');ctx.strokeStyle='#b5e7ce';ctx.lineWidth=2;ctx.strokeRect(W/2-210,18,420,42);ctx.textAlign='center';ctx.font='900 16px sans-serif';ctx.fillStyle=bannerText.includes('BOSSES')||bannerText.includes('GUARDIAN')?'#ffdc91':'#e6fff1';ctx.fillText(bannerText,W/2,45);ctx.restore()}
 function drawPlacementHint(){if(gameOver)return;ctx.save();ctx.fillStyle='#254b57cc';ctx.font='bold 11px sans-serif';ctx.textAlign='left';const message=selected?'ĐANG CHỌN: '+types[selected].name+' · '+types[selected].cost+' ⚡ — CHỌN Ô ĐẤT':'CHỌN THÁP ĐÃ XÂY ĐỂ NÂNG CẤP / XÓA';ctx.fillText(message,15,H-15);ctx.restore()}
-function draw(){ctx.save();if(cameraShake>0){ctx.translate(rand(-cameraShake,cameraShake),rand(-cameraShake,cameraShake))}drawGround();drawWorldAtmosphere();drawPath();drawBuildPads();buildPads.forEach((p,i)=>drawPadRegalia(p,i,towers.some(t=>t.padIndex===i),!!selected&&!towers.some(t=>t.padIndex===i),hoveredPad===i));drawDecor();drawAmbientMagic();drawBase();towers.forEach(drawTower);towers.forEach(drawTowerEvolution);towers.forEach(drawTowerRegalia);drawMists();enemies.forEach(drawEnemy);drawBossWarnings();drawBeamEffects();drawLightningArcs();drawBullets();drawParticles();drawBursts();drawBanner();drawPlacementHint();if(screenFlash>0){ctx.fillStyle=`rgba(235,250,255,${screenFlash*.18})`;ctx.fillRect(0,0,W,H)}if(gameOver){ctx.fillStyle='#071522d9';ctx.fillRect(0,0,W,H);ctx.textAlign='center';ctx.fillStyle='#ff9eaa';ctx.font='900 40px sans-serif';ctx.fillText('CĂN CỨ THẤT THỦ',W/2,H/2);ctx.fillStyle='white';ctx.font='16px sans-serif';ctx.fillText('Nhấn CHƠI LẠI để thử sức lần nữa',W/2,H/2+35)}ctx.restore()}
+function draw(){ctx.save();if(cameraShake>0){ctx.translate(rand(-cameraShake,cameraShake),rand(-cameraShake,cameraShake))}drawGround();drawWorldAtmosphere();drawPath();drawBuildPads();buildPads.forEach((p,i)=>drawPadRegalia(p,i,towers.some(t=>t.padIndex===i),!!selected&&!towers.some(t=>t.padIndex===i),hoveredPad===i));drawDecor();drawAmbientMagic();drawBase();towers.forEach(drawTower);towers.forEach(drawTowerEvolution);towers.forEach(drawTowerRegalia);drawMists();enemies.forEach(drawEnemy);drawBossWarnings();drawBeamEffects();drawLightningArcs();drawBullets();drawParticles();drawClimateEffects();drawBursts();drawBanner();drawPlacementHint();if(screenFlash>0){ctx.fillStyle=`rgba(235,250,255,${screenFlash*.18})`;ctx.fillRect(0,0,W,H)}if(gameOver){ctx.fillStyle='#071522d9';ctx.fillRect(0,0,W,H);ctx.textAlign='center';ctx.fillStyle='#ff9eaa';ctx.font='900 40px sans-serif';ctx.fillText('CĂN CỨ THẤT THỦ',W/2,H/2);ctx.fillStyle='white';ctx.font='16px sans-serif';ctx.fillText('Nhấn CHƠI LẠI để thử sức lần nữa',W/2,H/2+35)}ctx.restore()}
 function loop(now){const dt=Math.min((now-last)/1000||0,.04);last=now;update(dt);draw();requestAnimationFrame(loop)}
 
 // ---------------- Sound: original Web Audio synthesis ----------------
